@@ -1,0 +1,20 @@
+﻿@model Department
+@{
+    ViewData["Title"] = "Edit Department";
+}
+
+<h1 class="my-3">Edit @Model.Name Department</h1>
+
+<form asp-action="Edit">
+
+    <partial name="PartialViews/CreateEditPartial" />
+
+    <input class="btn btn-primary" value="Save" type="submit" /> |
+    <a class="btn btn-light" asp-action="Index">Cancel</a>
+</form>
+
+
+@section ValidationScripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

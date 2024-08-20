@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace MVC.DAL.Models
 {
-    public class Department
+    public class Department : BaseEntity
     {
-        public int Id { get; set; }
+        
         [Required]
         public string Code { get; set; }
         [Required]
         public string Name { get; set; }
+        [Display(Name = "Date Of Creation")]
         public DateTime DateOfCreation { get; set; }
     }
 }
