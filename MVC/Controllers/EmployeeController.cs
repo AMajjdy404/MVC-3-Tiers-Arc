@@ -4,28 +4,37 @@ using Microsoft.Extensions.Hosting;
 using MVC.BLL.Interfaces;
 using MVC.DAL.Models;
 using System;
+using System.Linq;
 
 namespace MVC.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-
-        private readonly IGenericRepository<Employee> _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository _departmentRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IGenericRepository<Employee> employeeRepository, IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository employeeRepository,IDepartmentRepository departmentRepository ,IWebHostEnvironment env)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
             _env = env;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchInput)
         {
-            var employee = _employeeRepository.GetAll();
-            return View(employee);
+            var employees = Enumerable.Empty<Employee>();
+
+            if (string.IsNullOrEmpty(searchInput))
+                employees = _employeeRepository.GetAll();
+            else
+                employees = _employeeRepository.GetEmployeeByName(searchInput);
+
+            return View(employees);
         }
 
         public IActionResult Create()
         {
+            ViewBag.Departments = _departmentRepository.GetAll();
             return View();
         }
         [HttpPost]
@@ -35,7 +44,9 @@ namespace MVC.PL.Controllers
             {
                 var Count = _employeeRepository.Add(employee);
                 if (Count > 0)
+                    TempData["Message"] = $"Employee is Added!";
                     return RedirectToAction(nameof(Index));
+
 
             }
             return View(employee);
@@ -53,6 +64,7 @@ namespace MVC.PL.Controllers
 
         public IActionResult Edit(int? id)
         {
+            ViewBag.Departments = _departmentRepository.GetAll();
             return Details(id, "Edit");
         }
 
@@ -67,7 +79,9 @@ namespace MVC.PL.Controllers
             {
                 try
                 {
-                    _employeeRepository.Update(employee);
+                   var count = _employeeRepository.Update(employee);
+                    if (count > 0)
+                        TempData["Message"] = $"Employee is Updated!";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -94,7 +108,9 @@ namespace MVC.PL.Controllers
         {
             try
             {
-                _employeeRepository.Delete(employee);
+                var count = _employeeRepository.Delete(employee);
+                if (count > 0)
+                    TempData["Message"] = $"Employee is Deleted!";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

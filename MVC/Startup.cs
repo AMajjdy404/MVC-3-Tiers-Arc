@@ -36,7 +36,7 @@ namespace MVC
             });
 
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
+            services.AddScoped<IEmployeeRepository,EmployeeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,6 +5,32 @@
 
 <h1 class="my-3">All Employees</h1>
 
+@if (TempData["Message"] as string == "Employee is Updated!")
+{
+
+    <div class="alert alert-primary Tempdata">@TempData["Message"]</div>
+}
+else if (TempData["Message"] as string == "Employee is Deleted!")
+{
+    <div class="alert alert-danger Tempdata">@TempData["Message"]</div>
+
+}
+else if (TempData["Message"] as string == "Employee is Added!")
+{
+    <div class="alert alert-success Tempdata">@TempData["Message"]</div>
+
+}
+else if (TempData["Message"] is null)
+{
+    <div></div>
+}
+
+
+<form class="d-flex" role="search" asp-action="Index">
+    <input class="form-control me-2" type="search" name ="searchInput" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+
 <a class="btn btn-primary my-3" asp-controller="Employee" asp-action="Create">Create New Employee</a>
 
 @if(Model.Count() > 0)
@@ -17,6 +43,7 @@
                 <td>@Html.DisplayNameFor(d => d.Address)</td>
                 <td>@Html.DisplayNameFor(d => d.Salary)</td>
                 <td>@Html.DisplayNameFor(d => d.Email)</td>
+                <td>@Html.DisplayNameFor(d => d.Department)</td>
                 @* <td>@Html.DisplayNameFor(d => d.PhoneNumber)</td> *@
                 <td>@Html.DisplayNameFor(d => d.IsActive)</td>
                 <td>@Html.DisplayNameFor(d => d.Gender)</td>
@@ -35,9 +62,18 @@
                     <td>@item.Age</td>
                     <td>@item.Address</td>
                     <td>@Html.DisplayFor(M => item.Salary)</td>
-                    <td>@Html.DisplayFor(M =>item.Email)</td>
+                    <td>@Html.DisplayFor(M => item.Email)</td>
+                    <td>@Html.DisplayFor(M => item.Department.Name)</td>
                     @* <td>@item.PhoneNumber</td> *@
-                    <td>@Html.DisplayFor(M =>item.IsActive)</td>
+                    <td>
+                        @if(item.IsActive == true)
+                        {
+                            <i class="fa-solid fa-circle-check text-success"></i>
+                        }else
+                        {
+                            <i class="fa-solid fa-circle-xmark text-danger"></i>
+                        }
+                    </td>
                     <td>@item.Gender</td>
                     @* <td>@item.EmployeeType</td> *@
                     <td>@item.HiringDate</td>

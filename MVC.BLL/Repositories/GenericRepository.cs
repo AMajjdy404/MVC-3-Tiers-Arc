@@ -36,8 +36,12 @@ namespace MVC.BLL.Repositories
         }
 
         public IEnumerable<T> GetAll()
-        => _dbContext.Set<T>().AsNoTracking().ToList(); // AsNoTracking().ToList() => Immediate Execution
-
+        {
+            if (typeof(T) == typeof(Employee))
+                return (IEnumerable<T>)_dbContext.Employees.Include(e => e.Department).AsNoTracking().ToList(); // AsNoTracking().ToList() => Immediate Execution
+            else
+                return _dbContext.Set<T>().AsNoTracking().ToList();
+        }
 
         public T GetById(int id)
         => _dbContext.Set<T>().Find(id);

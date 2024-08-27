@@ -2,3 +2,13 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+
+var Tempdata = document.querySelector(".Tempdata");
+
+function removeTempdata() {
+    if (Tempdata)
+        Tempdata.remove();
+}
+
+setInterval(removeTempdata, 3000);
