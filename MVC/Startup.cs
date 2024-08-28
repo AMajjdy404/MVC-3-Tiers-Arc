@@ -9,6 +9,7 @@ using MVC.BLL.Interfaces;
 using MVC.BLL.Repositories;
 using MVC.DAL.Data;
 using MVC.DAL.Models;
+using MVC.PL.MappingProfiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,8 @@ namespace MVC
 
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IEmployeeRepository,EmployeeRepository>();
+
+            services.AddAutoMapper(typeof(EmployeeProfile),typeof(DepartmentProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

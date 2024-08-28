@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using MVC.BLL.Interfaces;
 using MVC.DAL.Models;
+using MVC.PL.Models;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using static MVC.PL.Models.EmployeeViewModel;
+using Employee = MVC.DAL.Models.Employee;
 
 namespace MVC.PL.Controllers
 {
@@ -13,23 +19,31 @@ namespace MVC.PL.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IWebHostEnvironment _env;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository,IDepartmentRepository departmentRepository ,IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository employeeRepository,
+            IDepartmentRepository departmentRepository,
+            IWebHostEnvironment env,
+            IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
             _env = env;
+            _mapper = mapper;
         }
         public IActionResult Index(string searchInput)
         {
-            var employees = Enumerable.Empty<Employee>();
+             IEnumerable<Employee> employees;
+            IEnumerable<EmployeeViewModel> employeesVm;
 
             if (string.IsNullOrEmpty(searchInput))
                 employees = _employeeRepository.GetAll();
             else
                 employees = _employeeRepository.GetEmployeeByName(searchInput);
 
-            return View(employees);
+            employeesVm = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+
+            return View(employeesVm);
         }
 
         public IActionResult Create()
@@ -38,18 +52,20 @@ namespace MVC.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeViewModel employeeVM)
         {
-            if (ModelState.IsValid) // Servere Side Validation
+            if (ModelState.IsValid) // Server Side Validation
             {
-                var Count = _employeeRepository.Add(employee);
+                var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+
+                var Count = _employeeRepository.Add(MappedEmployee);
                 if (Count > 0)
                     TempData["Message"] = $"Employee is Added!";
-                    return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
 
 
             }
-            return View(employee);
+            return View(employeeVM);
         }
 
         public IActionResult Details(int? id, string viewName = "Details")
@@ -57,9 +73,11 @@ namespace MVC.PL.Controllers
             if (id is null)
                 return BadRequest();
             var employee = _employeeRepository.GetById(id.Value);
+            var MappedEmployee = _mapper.Map<Employee, EmployeeViewModel>(employee);
+
             if (employee is null)
                 return NotFound();
-            return View(viewName, employee);
+            return View(viewName, MappedEmployee);
         }
 
         public IActionResult Edit(int? id)
@@ -70,16 +88,17 @@ namespace MVC.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVm)
         {
-            if (employee.Id != id)
+            if (employeeVm.Id != id)
                 return BadRequest();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                   var count = _employeeRepository.Update(employee);
+                    var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+                    var count = _employeeRepository.Update(MappedEmployee);
                     if (count > 0)
                         TempData["Message"] = $"Employee is Updated!";
                     return RedirectToAction(nameof(Index));
@@ -91,24 +110,26 @@ namespace MVC.PL.Controllers
                     else
                         ModelState.AddModelError(string.Empty, "There is Error Occurred During Updating the Employee");
 
-                    return View(employee);
 
+                    return View(employeeVm);
                 }
+
             }
+            return View(employeeVm);
 
-            return View(employee);
         }
-
         public IActionResult Delete(int? id)
         {
             return Details(id, "Delete");
         }
+
         [HttpPost]
-        public IActionResult Delete(Employee employee)
+        public IActionResult Delete(EmployeeViewModel employeeVm)
         {
             try
             {
-                var count = _employeeRepository.Delete(employee);
+                var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+                var count = _employeeRepository.Delete(MappedEmployee);
                 if (count > 0)
                     TempData["Message"] = $"Employee is Deleted!";
                 return RedirectToAction(nameof(Index));
@@ -121,9 +142,9 @@ namespace MVC.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "There is Error Occurred During Deleting this Employee");
 
-                return View(employee);
+                return View(employeeVm);
             }
         }
     }
-}
 
+}
