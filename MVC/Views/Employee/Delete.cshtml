@@ -5,7 +5,7 @@
 
 <h1>You Want to Delete <span class="text-primary font-weight-bold">@Model.Name</span>? </h1>
 
-<form asp-action="Delete">
+<form asp-action="Delete" enctype="multipart/form-data">
 
     <partial name="PartialViews/DetailsDeletePartial" />
 

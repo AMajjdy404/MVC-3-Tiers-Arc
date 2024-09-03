@@ -40,6 +40,8 @@ namespace MVC.DAL.Models
         public DateTime DateOfCreation { get; set; } = DateTime.Now;
         public bool IsDeleted { get; set; }
 
+        public string ImageName { get; set; }
+
         [ForeignKey("Department")]
         public int? DepartmentId { get; set; }
         [InverseProperty("Employees")]

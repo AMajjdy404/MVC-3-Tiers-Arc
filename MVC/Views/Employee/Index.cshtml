@@ -38,6 +38,7 @@ else if (TempData["Message"] is null)
     <table class="mt-3 table text-center">
         <thead>
             <tr class="font-weight-bold">
+                <td>Image</td>
                 <td>@Html.DisplayNameFor(d=> d.Name)</td>
                 <td>@Html.DisplayNameFor(d => d.Age)</td>
                 <td>@Html.DisplayNameFor(d => d.Address)</td>
@@ -58,6 +59,9 @@ else if (TempData["Message"] is null)
             @foreach(var item in Model)
             {
                 <tr>
+                    <td>
+                        <img src="~/Files/Images/@item.ImageName" alt="@item.Name Image" width="75" class="rounded img-fluid my-3" />
+                    </td>
                     <td>@item.Name</td>
                     <td>@item.Age</td>
                     <td>@item.Address</td>

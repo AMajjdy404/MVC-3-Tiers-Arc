@@ -18,21 +18,18 @@ namespace MVC.BLL.Repositories
         {
             _dbContext = dbContext;
         }
-        public int Add(T Entity)
+        public void Add(T Entity)
         {
             _dbContext.Set<T>().Add(Entity);
-            return _dbContext.SaveChanges();
         }
 
-        public int Update(T Entity)
+        public void Update(T Entity)
         {
             _dbContext.Set<T>().Update(Entity);
-            return _dbContext.SaveChanges();
         }
-        public int Delete(T Entity)
+        public void Delete(T Entity)
         {
             _dbContext.Set<T>().Remove(Entity);
-            return _dbContext.SaveChanges();
         }
 
         public IEnumerable<T> GetAll()

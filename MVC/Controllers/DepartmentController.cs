@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using MVC.BLL.Interfaces;
+using MVC.BLL.Repositories;
 using MVC.DAL.Models;
 using MVC.PL.ViewModels;
 using System;
@@ -15,19 +16,22 @@ namespace MVC.PL.Controllers
     // Composition => DepartmentController has an object that implements IDepartmentRepository interface
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _env;
         private readonly IMapper _mapper;
 
-        public DepartmentController(IDepartmentRepository departmentRepository, IWebHostEnvironment env, IMapper mapper)
+        public DepartmentController( IUnitOfWork unitOfWork
+            /*IDepartmentRepository departmentRepository*/,
+            IWebHostEnvironment env,
+            IMapper mapper)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
             _env = env;
             _mapper = mapper;
         }
         public IActionResult Index()
         {
-            var department = _departmentRepository.GetAll();
+            var department = _unitOfWork.DepartmentRepository.GetAll();
             var MappedDepartment = _mapper.Map<IEnumerable<Department> ,IEnumerable<DepartmentViewModel> >(department);
             return View(MappedDepartment);
         }
@@ -42,8 +46,9 @@ namespace MVC.PL.Controllers
             if(ModelState.IsValid) // Servere Side Validation
             {
                 var MappedDepartment = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                var Count = _departmentRepository.Add(MappedDepartment);
-                if(Count > 0) 
+                _unitOfWork.DepartmentRepository.Add(MappedDepartment);
+                var Count = _unitOfWork.Complete();
+                if (Count > 0) 
                     return RedirectToAction(nameof(Index));
                 
             }
@@ -54,7 +59,7 @@ namespace MVC.PL.Controllers
         {
             if (id is null)
                 return BadRequest();
-            var department = _departmentRepository.GetById(id.Value);
+            var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
             var MappedDepartment = _mapper.Map<Department,DepartmentViewModel>(department);
             if(department is null)
                 return NotFound();
@@ -77,9 +82,11 @@ namespace MVC.PL.Controllers
             {
                 try
                 {
-                    var MappedDepartment = _mapper.Map<DepartmentViewModel,Department>(departmentVm);
-                    _departmentRepository.Update(MappedDepartment);
-                    return RedirectToAction(nameof(Index));
+                    var MappedDepartment = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
+                    _unitOfWork.DepartmentRepository.Update(MappedDepartment);
+                    var Count = _unitOfWork.Complete();
+                    if (Count > 0)
+                        return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
@@ -106,8 +113,10 @@ namespace MVC.PL.Controllers
             try
             {
                 var MappedDepartment = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                _departmentRepository.Delete(MappedDepartment);
-                return RedirectToAction(nameof(Index));
+                _unitOfWork.DepartmentRepository.Delete(MappedDepartment);
+                var Count = _unitOfWork.Complete();
+                if (Count > 0)
+                    return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -119,6 +128,7 @@ namespace MVC.PL.Controllers
 
                 return View(departmentVm);
             }
+            return View(departmentVm);
         }
     }
 }

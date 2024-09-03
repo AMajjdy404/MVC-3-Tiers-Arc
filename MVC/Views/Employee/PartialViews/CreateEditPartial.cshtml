@@ -1,7 +1,8 @@
-﻿@model EmployeeViewModel
-
+﻿
+@model EmployeeViewModel
+@inject IUnitOfWork unitOfWork
 @{
-    var departments = new SelectList(@ViewBag.Departments, "Id", "Name");
+    var departments = new SelectList(unitOfWork.DepartmentRepository.GetAll(), "Id", "Name");
 }
 
 <div class="form-group">
@@ -29,7 +30,10 @@
    <select asp-items="departments" asp-for="DepartmentId" class="form-control">
        <option value="@null">----- Select Department -----</option>
    </select>
-    
+</div>
+<div class="form-group">
+    <label asp-for="Image"></label>
+    <input asp-for="Image" class="form-control-file"/>
 </div>
 <div class="form-group">
     <label asp-for="Email"></label>

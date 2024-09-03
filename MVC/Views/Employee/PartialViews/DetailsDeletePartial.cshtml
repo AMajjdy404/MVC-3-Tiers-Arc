@@ -1,9 +1,12 @@
 ﻿@model EmployeeViewModel
 
+<div>
+    <img src="~/Files/Images/@Model.ImageName" alt="@Model.Name Image" width="75" class="rounded img-fluid my-3" />
+</div>
+
 <div class="form-group">
     <label asp-for="Name"></label>
     <input asp-for="Name" class="form-control" readonly />
-
 </div>
 <div class="form-group">
     <label asp-for="Age"></label>
