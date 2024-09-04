@@ -9,6 +9,7 @@ using MVC.PL.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MVC.PL.Controllers
 {
@@ -29,9 +30,9 @@ namespace MVC.PL.Controllers
             _env = env;
             _mapper = mapper;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var department = _unitOfWork.DepartmentRepository.GetAll();
+            var department = await _unitOfWork.DepartmentRepository.GetAllAsync();
             var MappedDepartment = _mapper.Map<IEnumerable<Department> ,IEnumerable<DepartmentViewModel> >(department);
             return View(MappedDepartment);
         }
@@ -41,13 +42,13 @@ namespace MVC.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(DepartmentViewModel departmentVm)
+        public async Task<IActionResult> Create(DepartmentViewModel departmentVm)
         {
             if(ModelState.IsValid) // Servere Side Validation
             {
                 var MappedDepartment = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
                 _unitOfWork.DepartmentRepository.Add(MappedDepartment);
-                var Count = _unitOfWork.Complete();
+                var Count = await _unitOfWork.CompleteAsync();
                 if (Count > 0) 
                     return RedirectToAction(nameof(Index));
                 
@@ -55,25 +56,25 @@ namespace MVC.PL.Controllers
             return View(departmentVm);
         }
 
-        public IActionResult Details(int? id,string viewName = "Details")
+        public async Task<IActionResult> Details(int? id,string viewName = "Details")
         {
             if (id is null)
                 return BadRequest();
-            var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
+            var department =await _unitOfWork.DepartmentRepository.GetByIdAsync(id.Value);
             var MappedDepartment = _mapper.Map<Department,DepartmentViewModel>(department);
             if(department is null)
                 return NotFound();
             return View(viewName, MappedDepartment);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id,DepartmentViewModel departmentVm)
+        public async Task<IActionResult> Edit([FromRoute] int id,DepartmentViewModel departmentVm)
         {
             if(departmentVm.Id != id)
                 return BadRequest();
@@ -84,7 +85,7 @@ namespace MVC.PL.Controllers
                 {
                     var MappedDepartment = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
                     _unitOfWork.DepartmentRepository.Update(MappedDepartment);
-                    var Count = _unitOfWork.Complete();
+                    var Count = await _unitOfWork.CompleteAsync();
                     if (Count > 0)
                         return RedirectToAction(nameof(Index));
                 }
@@ -103,18 +104,18 @@ namespace MVC.PL.Controllers
             return View(departmentVm);
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete"); 
+            return await Details(id, "Delete"); 
         }
         [HttpPost]
-        public IActionResult Delete(DepartmentViewModel departmentVm)
+        public async Task<IActionResult> Delete(DepartmentViewModel departmentVm)
         {
             try
             {
                 var MappedDepartment = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
                 _unitOfWork.DepartmentRepository.Delete(MappedDepartment);
-                var Count = _unitOfWork.Complete();
+                var Count = await _unitOfWork.CompleteAsync();
                 if (Count > 0)
                     return RedirectToAction(nameof(Index));
             }

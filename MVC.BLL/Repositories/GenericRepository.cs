@@ -32,16 +32,16 @@ namespace MVC.BLL.Repositories
             _dbContext.Set<T>().Remove(Entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             if (typeof(T) == typeof(Employee))
-                return (IEnumerable<T>)_dbContext.Employees.Include(e => e.Department).AsNoTracking().ToList(); // AsNoTracking().ToList() => Immediate Execution
+                return  (IEnumerable<T>)await _dbContext.Employees.Include(e => e.Department).AsNoTracking().ToListAsync(); // AsNoTracking().ToList() => Immediate Execution
             else
-                return _dbContext.Set<T>().AsNoTracking().ToList();
+                return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public T GetById(int id)
-        => _dbContext.Set<T>().Find(id);
+        public async Task<T> GetByIdAsync(int id)
+        => await _dbContext.Set<T>().FindAsync(id);
 
     }
 }

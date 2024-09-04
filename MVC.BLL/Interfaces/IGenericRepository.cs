@@ -9,8 +9,8 @@ namespace MVC.BLL.Interfaces
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
-        IEnumerable<T> GetAll();
-        T GetById(int id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetByIdAsync(int id);
         void Add(T Entity);
         void Update(T Entity);
         void Delete(T Entity);

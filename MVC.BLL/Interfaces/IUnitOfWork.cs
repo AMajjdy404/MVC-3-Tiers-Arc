@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MVC.BLL.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
         public IEmployeeRepository EmployeeRepository { get; set; }
         public IDepartmentRepository DepartmentRepository { get; set; }
-        int Complete();
+        Task<int> CompleteAsync();
     }
 }

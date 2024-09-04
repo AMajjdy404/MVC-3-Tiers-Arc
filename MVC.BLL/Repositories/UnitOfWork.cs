@@ -19,12 +19,12 @@ namespace MVC.BLL.Repositories
             EmployeeRepository = new EmployeeRepository(_dbContext);
             DepartmentRepository = new DepartmentRepository(_dbContext);
         }
-        public int Complete()
-        => _dbContext.SaveChanges();
+        public async Task<int> CompleteAsync()
+        => await _dbContext.SaveChangesAsync();
           
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            _dbContext.Dispose();
+           await _dbContext.DisposeAsync();
         }
     }
 }
