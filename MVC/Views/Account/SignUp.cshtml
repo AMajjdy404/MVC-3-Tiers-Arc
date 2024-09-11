@@ -1,0 +1,77 @@
+﻿@model SignUpViewModel
+@{
+    ViewData["Title"] = "SignUp";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="col-xl-6">
+    <div class="card-body p-md-5 text-black">
+        <h3 class="mb-5 text-uppercase">Create Account</h3>
+        <form asp-action="SignUp">
+
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div data-mdb-input-init class="form-outline">
+                    <input asp-for="FirstName" class="form-control" />
+                        <label class="form-label font-italic " asp-for="FirstName"></label>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div data-mdb-input-init class="form-outline">
+                    <input asp-for="LastName" class="form-control form-control-lg" />
+                        <label class="form-label font-italic " asp-for="LastName"></label>
+                </div>
+            </div>
+        </div>
+
+
+        <div data-mdb-input-init class="form-outline mb-4">
+            <input asp-for="Username"  class="form-control form-control-lg" />
+                <label class="form-label font-italic " asp-for="Username"></label>
+        </div>
+
+
+        <div data-mdb-input-init class="form-outline mb-4">
+            <input asp-for="Email" class="form-control form-control-lg" />
+                <label class="form-label  font-italic " asp-for="Email"></label>
+        </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                        <input asp-for="Password" class="form-control form-control-lg" />
+                        <label class="form-label  font-italic " asp-for="Password"></label>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                        <input asp-for="ConfirmPassword" class="form-control form-control-lg" />
+                        <label class="form-label font-italic " asp-for="ConfirmPassword"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input asp-for="IsAgree" type="checkbox" class="form-check-input ml-2" id="IsActive">
+                <label class="form-check-label ml-5 font-italic " for="IsActive">I Agree all Statements in Terms of service</label>
+            </div>
+
+            <p class="text-center text-muted mt-5 mb-0">
+                Have already an account? <a asp-action="SignIn"
+                                            class="fw-bold text-primary"><u>Login here</u></a>
+            </p>
+
+        <div class="d-flex justify-content-center mt-3 pt-3">
+            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg ms-2 font-weight-bold">SIGN UP</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+@section ValidationScripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace MVC.PL.Controllers
 {
+    [Authorize]
+
     // Inheritance => DepartmentController is a Controller
     // Composition => DepartmentController has an object that implements IDepartmentRepository interface
     public class DepartmentController : Controller

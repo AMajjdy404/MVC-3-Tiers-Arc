@@ -1,0 +1,55 @@
+﻿@model SignInViewModel
+@{
+    ViewData["Title"] = "SignIn";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="col-xl-6">
+    <div class="card-body p-md-5 text-black">
+        <h3 class="mb-5 text-uppercase">Sign In</h3>
+        <form asp-action="SignIn">
+
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+            @if (TempData["ResetSucceeded"] is not null)
+            {
+                <div class="alert alert-success Tempdata my-2">
+                    @TempData["ResetSucceeded"]
+                </div>
+            }
+
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input asp-for="Email" class="form-control form-control-lg" />
+                <label class="form-label  font-italic " asp-for="Email"></label>
+            </div>
+
+            <div data-mdb-input-init class="form-outline mb-4">
+                <input asp-for="Password" class="form-control form-control-lg" />
+                <label class="form-label  font-italic " asp-for="Password"></label>
+            </div>
+
+            <div class="form-group">
+                <input asp-for="RememberMe" type="checkbox" class="form-check-input ml-2" id="RememberMe">
+                <label asp-for="RememberMe" class="form-check-label ml-5 font-italic " for="RememberMe"></label>
+            </div>
+
+            <p class="text-center text-muted mt-5 mb-0">
+                <a asp-action="ForgetPassword"
+                                          class="fw-bold text-success"><u>Forget Password</u></a>
+            </p>
+
+            <p class="text-center text-muted mt-5 mb-0">
+                 Don't have an account? <a asp-action="SignUp"
+                                            class="fw-bold text-primary"><u>Register here</u></a>
+            </p>
+
+            <div class="d-flex justify-content-center mt-3 pt-3">
+                <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg ms-2 font-weight-bold">SIGN IN</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section ValidationScripts {
+    <partial name="_ValidationScriptsPartial" />
+}

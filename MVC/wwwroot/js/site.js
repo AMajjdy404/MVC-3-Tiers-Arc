@@ -4,11 +4,15 @@
 // Write your JavaScript code.
 
 
-var Tempdata = document.querySelector(".Tempdata");
+//var Tempdata = document.querySelector(".Tempdata");
 
-function removeTempdata() {
-    if (Tempdata)
-        Tempdata.remove();
-}
+//function removeTempdata() {
+//    if (Tempdata)
+//        Tempdata.remove();
+//}
 
-setInterval(removeTempdata, 3000);
+//setInterval(removeTempdata, 3000);
+
+
+$(".Tempdata").delay(2000).fadeOut(2000);
+

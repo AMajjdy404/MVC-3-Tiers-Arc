@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MVC.Models;
 using System;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
+    [Authorize]
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -22,7 +25,7 @@ namespace MVC.Controllers
         {
             return View();
         }
-
+        [Authorize(Roles ="Admin")]
         public IActionResult Privacy()
         {
             return View();
